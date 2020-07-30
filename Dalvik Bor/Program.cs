@@ -18,11 +18,15 @@ namespace Dalvik_Bot
         {
             waitingForCommand,
             sayHello,
+            accessDenied,
+            commandNotExists,
         }
         private void InitDictionary()
         {
             Dictionary.Add(Catergories.waitingForCommand, new string[] { "Ma che cazzo volete sempre? :face_with_monocle:", "Ma chi è il solito rompi palle?", "Madonna, ti scanno! Devi dirmi un comando bineurone", "Ma cos'è sei nato ritardato? devi darmi un comando", "Oh si, schiavizzami signore mio, sono al tuo servizio", "$help per avere più info coglione", "mh, ok, sei simpatico", "tua madre ha culo corto", "ciao! che cazzo vuoi?", "We la!", "...", "... :smile: e cosa vorresti?"});
             Dictionary.Add(Catergories.sayHello, new string[] { "Sono intollerante al lattosio, anche ai coglioni", "🦻🏾 non ci sento, parla più forte 😉", "👋", "", "Dai basta, è la 40esima volta oggi", "ahah, ma quanto sei simpi? a no sei simp 👍", "😀", "ciao anche a te! :smile:", "si, ok... salve 😬", "mh..., buon giorno, desideri?", "Non mi rompere i coglioni, non sto in vena oggi!", "Sei un po' cringe", "buon salve", "Viva i comunisti", "Lasciami dormire coglione", "Non vedo perchè risponderti... 🤷", "🤦 non cercare di rimorchiarmi", "Vai in Brasile e non tornare mai più, tieni ti ho anche fatto le valige 🧳", "Shhhh", "Sto dormendo, è Domenica... a no forse no", "Sto dormendo... 💤", "Ho sonno 🥱" });
+            Dictionary.Add(Catergories.accessDenied, new string[] { "Accesso negato bro ⛔", "mh, no mi dispiace!", "è inutile che continui a fare il comando, tanto lo può usare solo Carpal", "no!", "eh si ciao, mica so scemo", "puoi star qui fino a domani, tanto non te lo faccio usare", "if (signal.Author.Mention == \"<@!699146708466008115>\"){  <- vuol dire che solo carpal può...", "🖕🏻" });
+            Dictionary.Add(Catergories.commandNotExists, new string[] { "Non so che cazzo vuoi, ma quel comando non esiste...", "$help per info sui comandi🤦‍", "ufficio coglioni, di là", "no!, questo comando te lo sei letteralmente inventato!", "e secondo te io potevo avere un comando così brutto?", "mhh... non so dicosa parli", "non ho voglia di aiutarti" });
             MainAsync().GetAwaiter().GetResult();
         }
 
@@ -55,7 +59,7 @@ namespace Dalvik_Bot
         private async Task receiveMessages(SocketMessage signal)
         {
             // def simple class for easiest method using
-            Message message = new Dalvik_Bot.Message();
+            Message message = new Message();
             message.Value = signal.Content;
             channel = signal.Channel;
 
@@ -64,13 +68,28 @@ namespace Dalvik_Bot
                 if (message.Pop(" ") == "$") await sendMessages(GetRandomAnswer(Catergories.waitingForCommand));
                 else if (message.startWith('$')) {
                     if (message.isCommand("ciao")) await sendMessages(GetRandomAnswer(Catergories.sayHello));
-                    else if (message.isCommand("say")) {
-                        try {
-                            await sendMessages(message.Value.Remove(0, 5));
-                            await signal.DeleteAsync();
-                        } catch (Exception e) { Console.WriteLine(e); }
+                    else if (message.isCommand("say")) await sendMessages(message.Value.Remove(0, 5));
+                    else if (message.isCommand("exec"))
+                    {
+                        if (signal.Author.Mention == "<@!699146708466008115>")
+                        {
+                            System.CodeDom.Compiler.CompilerResults result = new Microsoft.CSharp.CSharpCodeProvider(new Dictionary<string, string> {
+                            { "CompilerVersion", "v5" }
+                            }).CompileAssemblyFromSource(new System.CodeDom.Compiler.CompilerParameters { GenerateInMemory = true, GenerateExecutable = false }, message.Value.Remove(0, 6));
+                            if (result.Errors.Count != 0) {
+                                await sendMessages("Errori:");
+                                for (int i = 0; i < result.Errors.Count; i++) {
+                                    await sendMessages(result.Errors[i].ToString());
+                                }
+                            } else {
+                                await sendMessages($"Output:\n{result.Output}");
+                            }
+                        } else {
+                            await sendMessages(GetRandomAnswer(Catergories.accessDenied));
+                        }
+                    } else {
+                        await sendMessages(GetRandomAnswer(Catergories.commandNotExists));
                     }
-
 
                 }
 
@@ -184,7 +203,7 @@ namespace Dalvik_Bot
         }
         public bool isCommand(string command)
         {
-            return (Pop(" ").Substring(1, command.Count()) == command) ? true : false;
+            return (Pop(" ").Substring(1, command.Count()) == command && Value.Contains('$'+command+' ') || Pop(" ") == '$'+command) ? true : false;
         }
     }
 }
