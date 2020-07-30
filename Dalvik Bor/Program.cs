@@ -14,10 +14,26 @@ namespace Dalvik_Bot
 {
     class Program
     {
-        static void Main(string[] args) => new Program().MainAsync().GetAwaiter().GetResult();
+        enum Catergories
+        {
+            waitingForCommand,
+            sayHello,
+        }
+        private void InitDictionary()
+        {
+            Dictionary.Add(Catergories.waitingForCommand, new string[] { "Ma che cazzo volete sempre? :face_with_monocle:", "Ma chi è il solito rompi palle?", "Madonna, ti scanno! Devi dirmi un comando bineurone", "Ma cos'è sei nato ritardato? devi darmi un comando", "Oh si, schiavizzami signore mio, sono al tuo servizio", "$help per avere più info coglione", "mh, ok, sei simpatico", "tua madre ha culo corto", "ciao! che cazzo vuoi?", "We la!", "...", "... :smile: e cosa vorresti?"});
+            Dictionary.Add(Catergories.sayHello, new string[] { "Sono intollerante al lattosio, anche ai coglioni", "🦻🏾 non ci sento, parla più forte 😉", "👋", "", "Dai basta, è la 40esima volta oggi", "ahah, ma quanto sei simpi? a no sei simp 👍", "😀", "ciao anche a te! :smile:", "si, ok... salve 😬", "mh..., buon giorno, desideri?", "Non mi rompere i coglioni, non sto in vena oggi!", "Sei un po' cringe", "buon salve", "Viva i comunisti", "Lasciami dormire coglione", "Non vedo perchè risponderti... 🤷", "🤦 non cercare di rimorchiarmi", "Vai in Brasile e non tornare mai più, tieni ti ho anche fatto le valige 🧳", "Shhhh", "Sto dormendo, è Domenica... a no forse no", "Sto dormendo... 💤", "Ho sonno 🥱" });
+            MainAsync().GetAwaiter().GetResult();
+        }
+
+        // init words to use and start mainasync
+        static void Main(string[] args) => new Program().InitDictionary();
 
         // env var
         public DiscordSocketClient Client;
+        private Dictionary<Catergories, string[]> Dictionary = new Dictionary<Catergories, string[]>();
+        public Random Random = new Random();
+        ISocketMessageChannel channel;
 
         // async methods
         public async Task MainAsync()
@@ -41,18 +57,29 @@ namespace Dalvik_Bot
             // def simple class for easiest method using
             Message message = new Dalvik_Bot.Message();
             message.Value = signal.Content;
+            channel = signal.Channel;
 
 
             if (!signal.Author.IsBot) {
-                if (message.Pop(" ")[0] == '$') await sendMessages("Cosa c'è? :face_with_monocle:", signal.Channel);
+                if (message.Pop(" ") == "$") await sendMessages(GetRandomAnswer(Catergories.waitingForCommand));
+                else if (message.startWith('$')) {
+                    if (message.isCommand("ciao")) await sendMessages(GetRandomAnswer(Catergories.sayHello));
+                    else if (message.isCommand("say")) {
+                        try {
+                            await sendMessages(message.Value.Remove(0, 5));
+                            await signal.DeleteAsync();
+                        } catch (Exception e) { Console.WriteLine(e); }
+                    }
 
+
+                }
 
             }
         }
 
-        private async Task sendMessages(string message, ISocketMessageChannel channel)
+        private async Task sendMessages(string message)
         {
-            channel.SendMessageAsync(message);
+            await channel.SendMessageAsync(message);
         }
 
         private Task log(LogMessage message)
@@ -63,6 +90,10 @@ namespace Dalvik_Bot
             return Task.CompletedTask;
         }
 
+        private string GetRandomAnswer(Catergories category)
+        {
+            return Dictionary[category][Random.Next(0, Dictionary[category].Count()-1)];
+        }
     }
     class Message
     {
@@ -146,6 +177,14 @@ namespace Dalvik_Bot
                 if (!string.IsNullOrWhiteSpace(resultSplit[i])) toReturn.Add(resultSplit[i]);
             }
             return toReturn;
+        }
+        public bool startWith(char preCommand)
+        {
+            return (Pop(" ")[0] == '$') ? true : false;
+        }
+        public bool isCommand(string command)
+        {
+            return (Pop(" ").Substring(1, command.Count()) == command) ? true : false;
         }
     }
 }

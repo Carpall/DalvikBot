@@ -26,3 +26,31 @@ C:\Users\Mondelli\Documents\Visual Studio 2015\Projects\temp\Echo\Dalvik Bor\Dal
 C:\Users\Mondelli\Documents\Visual Studio 2015\Projects\temp\Echo\Dalvik Bor\Dalvik Bor\obj\Debug\Dalvik Bot.csprojResolveAssemblyReference.cache
 C:\Users\Mondelli\Documents\Visual Studio 2015\Projects\temp\Echo\Dalvik Bor\Dalvik Bor\obj\Debug\Dalvik Bot.exe
 C:\Users\Mondelli\Documents\Visual Studio 2015\Projects\temp\Echo\Dalvik Bor\Dalvik Bor\obj\Debug\Dalvik Bot.pdb
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\Dalvik Bot.exe.config
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\obj\Debug\Dalvik Bot.exe
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\obj\Debug\Dalvik Bot.pdb
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\Dalvik Bot.exe
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\Dalvik Bot.pdb
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\Discord.Net.Commands.dll
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\Discord.Net.Core.dll
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\Discord.Net.Rest.dll
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\Discord.Net.WebSocket.dll
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\System.Collections.Immutable.dll
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\System.Interactive.Async.dll
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\System.Linq.Async.dll
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\Discord.Net.Commands.xml
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\Discord.Net.Core.xml
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\Discord.Net.Rest.xml
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\Discord.Net.WebSocket.xml
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\System.Collections.Immutable.xml
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\System.Interactive.Async.xml
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\System.Linq.Async.xml
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Users\Mondelli\Desktop\Dalvik Bot\Dalvik Bor\Dalvik Bor\obj\Debug\Dalvik Bot.csprojResolveAssemblyReference.cache
