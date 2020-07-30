@@ -1,7 +1,0 @@
-C:\Users\Mondelli\source\repos\DalvikBot\DalvikBot\bin\Debug\DalvikBot.exe.config
-C:\Users\Mondelli\source\repos\DalvikBot\DalvikBot\bin\Debug\DalvikBot.exe
-C:\Users\Mondelli\source\repos\DalvikBot\DalvikBot\bin\Debug\DalvikBot.pdb
-C:\Users\Mondelli\source\repos\DalvikBot\DalvikBot\obj\Debug\DalvikBot.csprojAssemblyReference.cache
-C:\Users\Mondelli\source\repos\DalvikBot\DalvikBot\obj\Debug\DalvikBot.csproj.CoreCompileInputs.cache
-C:\Users\Mondelli\source\repos\DalvikBot\DalvikBot\obj\Debug\DalvikBot.exe
-C:\Users\Mondelli\source\repos\DalvikBot\DalvikBot\obj\Debug\DalvikBot.pdb
