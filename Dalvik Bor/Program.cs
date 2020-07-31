@@ -95,14 +95,15 @@ namespace Dalvik_Bot
                             await sendMessages(GetRandomAnswer(Catergories.accessDenied));
                         }
                     }
-                    //messaggi deletor
-                    else if (message.AsKeyword("search.stack")) await sendMessages($"Ecco la tua ricerca: https://stackoverflow.com/search?q={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}");
-                    else if (message.AsKeyword("search")) await sendMessages($"Ecco la tua ricerca: https://google.com/search?q={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}");
-                    else if (message.AsKeyword("search.github")) await sendMessages($"Ecco la tua ricerca: https://github.com/search?q={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}");
-                    else if (message.AsKeyword("search.duck")) await sendMessages($"Ecco la tua ricerca: https://duckduckgo.com/?q={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}&ia=web");
+                    else if (message.AsKeyword("search.stack ")) await sendMessages($"Ecco la tua ricerca: https://stackoverflow.com/search?q={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}");
+                    else if (message.AsKeyword("search.github ")) await sendMessages($"Ecco la tua ricerca: https://github.com/search?q={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}");
+                    else if (message.AsKeyword("search.duck ")) await sendMessages($"Ecco la tua ricerca: https://duckduckgo.com/?q={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}&ia=web");
+                    else if (message.AsKeyword("search ")) await sendMessages($"Ecco la tua ricerca: https://google.com/search?q={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}");
+                    else if (message.AsKeyword("search.ph ")) await sendMessages($"Ecco la tua ricerca: https://pornhub.com/search?q={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}");
+                    else if (message.AsKeyword("search.yt ")) await sendMessages($"Ecco la tua ricerca: https://youtube.com/results?search_query={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}");
                     else if (message.AsKeyword("source")) await sendMessages("Ecco il source: https://github.com/Carpall/DalvikBot");
                     else if (message.AsKeyword("author")) await sendMessages("Ecco la page dell'autore: https://github.com/Carpall");
-                    else if (message.AsKeyword("del")) await channel.DeleteMessageAsync();
+                    //else if (message.AsKeyword("del")) await channel.DeleteMessageAsync();
                     else await sendMessages(GetRandomAnswer(Catergories.commandNotExists));
                     // if message does not contains '$' access symbol
                 } else {
@@ -155,7 +156,24 @@ namespace Dalvik_Bot
         }
         public bool AsKeyword(string keyword)
         {
-            return (Pop(" ").StartsWith('$' + keyword)) ? true:false;
+            keyword = '$' + keyword;
+            if (Pop(" ").ToLower().Replace(keyword, "") == "") return true;
+            else {
+                if (Value.Replace(keyword, "") == Value && Value.Replace(keyword.ToUpper(), "") == Value) return false;
+                else {
+                    return true;
+                }
+            }
+            //string mes = Value.ToLower();
+            //if (Pop(" ").ToLower() == keyword) return true;
+            //for (int i = 0; i < keyword.Count(); i++) {
+            //    if (mes[i] == ' ')
+            //        return (mes.Substring(0, i - 1).ToLower() == keyword) ? true : false;
+            //    else if (mes[i] == keyword[i]) continue;
+            //    else
+            //        return (mes.Substring(0, i - 1) == keyword) ? true : false;
+            //}
+            //return true;
         }
         public string Select(int startIndex, int finishIndex)
         {
