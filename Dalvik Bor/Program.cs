@@ -21,6 +21,8 @@ namespace Dalvik_Bot
             accessDenied,
             commandNotExists,
             userJoin,
+            error,
+            ask,
         }
         private void InitDictionary()
         {
@@ -29,6 +31,8 @@ namespace Dalvik_Bot
             Dictionary.Add(Catergories.accessDenied, new string[] { "Accesso negato bro ⛔", "mh, no mi dispiace!", "è inutile che continui a fare il comando, tanto lo può usare solo Carpal", "no!", "eh si ciao, mica so scemo", "puoi star qui fino a domani, tanto non te lo faccio usare", "if (signal.Author.Mention == \"<@!699146708466008115>\"){  <- vuol dire che solo carpal può...", "🖕🏻" });
             Dictionary.Add(Catergories.commandNotExists, new string[] {"Ma sai scrivere?", "Per me, non sai scrivere", "Non so che cazzo vuoi, ma quel comando non esiste...", "$help per info sui comandi🤦‍", "ufficio coglioni, di là", "no!, questo comando te lo sei letteralmente inventato!", "e secondo te io potevo avere un comando così brutto?", "mhh... non so dicosa parli", "non ho voglia di aiutarti", "se fai $help vedi quanto sei scemo a fare un comando che non esiste", "cos.. no coglione, non so cosa voglia dire", "che cazz... quel comando ha meno senso della tua nascina", "unieuro... bho, che cazzo volevi??", "💩", "🚗 bruumm...", "... c'è tuo padre che ti chiama, non lo senti, su vai che poi ti castiva", "❗ chi cazzo mi ha chiamato" });
             Dictionary.Add(Catergories.userJoin, new string[] { "Cavolo! una persona nuova dopo 8 lustri...", "Finalmente novità", "Ciao!", "we laaa, io sono il più faigo", "va che ogni tanto entra qualcuno in sto server di morti di fame :face_with_monocle:", "Bravo, che sei entrato", "Ok... credo che sia entrato qualcuno", "è inutile che te lo aspetti... non sei il benvenuto", "Benvenuto :smile:", "ma la gente ha pure il coraggio di entrare in sto server?", "{mention} che nome di merda che hai", "Con quel nome, sarai cringissimo {mention}", "aho jamm' ja, n'amoce a pigghia nu caffettino aobbar, ciruz {mention}", "no ok... è davvero entrato qualcuno? 😅", "{mention} fidati esci! esci prima che puoi 🤐", "dai! {mention} per sta volta sei il benvenuto", "mh... non sei il benvenuto! esci perfavore....", "ahhahahahhahaahahha, non hai capito niente, questo gruppo è acccessibile solo ai maschi...", "{mention} aspetta aspetta, famoce un serfi 🤳🏻"});
+            Dictionary.Add(Catergories.error, new string[] { "C'è qualcosa di sbagliato in quel messaggio...", "Non so... forse sono bineurone, ma quel messaggio ha un format sbagliato", "Scrivi bene! Come faccio a capirci qualcosa?", "Non si capisce niente", "Cosa c'è di difficile nel scrivere?", "prova con $help per vedere la formattazione giusta", "mh... non sai scrivere?", "e io dovrei capirci qualcosa da sto obrobrio?", "bhe... se tu capisci che sto comando è scritto male, siamo già ad un passo avanti", "devi imparare a scrivere", "https://redooc.com/it/elementari/grammatica-italiana", "😤 grrr... non si capisce niente", "Ma scrivi bene per cribbio", "we la, niente dialetti qui... ok?", "ci eravamo intesi no? tu studi la grammatica e io ti aiuto", "no ok... questa schifezza non si può leggere", "spiacce... ma non so leggere" });
+            Dictionary.Add(Catergories.ask, new string[] { "mh... conoscendoti si...", "bhe sai... tu cosa ne pensi? ", "100%", ".... penso di si", "ahahhahah ma vattene va... ma ti pare mai possibile? :rofl:", "ahah tu me lo chiedi? :joy: :woman_facepalming:", "...e io che cazzo ne so :woman_shrugging:", "Questa domanda non ti pare un po' cringe?", "cringeeeee :grimacing:", "... mi sa :grimacing:", "ahahhaha, bhocccc", "vabbene", "ok ok :thumbsup:", "ehhhhm si penso di si", "per me va bene", "perfetto :thumbsup:", "che idiota... :joy: ma davvero?", "ahh non sapevo", "interessante, come il mio dito nel nel tuo culo :smile:", "ahah bhe se lo dici tu...", "ehhhhhhhh si, anzi... no", "ma che domanda è?", "non è una domanda", "che domanda inutile", "ciao... cosa?", "non capisco...", "secondo me sei scemo per chiedere queste cose...", "ahhh bho, devi valutare te..", "non dico niente :joy:", ".... ahahahha", "crepo", "ahahah non respiro ahah", "bhe penso di si", "assolutamente no", "bhe come dirti di si? mi pare ovvio... no", "forte e chiaro: no", "ah... no", "ehhehe ma dove vuoi andare?", "pufff ma si, illuditi", "carino, ma no...", "meglio io", "ah ok ahah", "per me no...", "per me, bhe... si dai :smile:", "kcsss ma perfavore", "bhe, perchè no?", "credici", "dinuovo, credici", "che carino! però no", "ahahha bho, secondo me no", "e io che cazo ne so? :rolfl:", "non è una domanda sensata...", "yep", "nop", "ma... non lo so? :joy:", "bho... io non ci credo" });
             MainAsync().GetAwaiter().GetResult();
         }
 
@@ -76,7 +80,7 @@ namespace Dalvik_Bot
                 if (message.Pop(" ") == "$") await sendMessages(GetRandomAnswer(Catergories.waitingForCommand));
                 else if (message.startWith('$')) {
                     if (message.AsKeyword("ciao")) await sendMessages(GetRandomAnswer(Catergories.sayHello));
-                    else if (message.AsKeyword("say")) {
+                    else if (message.AsKeyword("say ")) {
                         await sendMessages(message.Value.Remove(0, 5));
                         await signal.AddReactionAsync(new Emoji("✅"));
                     } else if (message.AsKeyword("exec")) {
@@ -94,11 +98,18 @@ namespace Dalvik_Bot
                         } else {
                             await sendMessages(GetRandomAnswer(Catergories.accessDenied));
                         }
-                    }
+                    } else if (message.AsKeyword("rand ")) {
+                        try { await sendMessages($"Ecco il tuo numero: {Random.Next(int.Parse(message.Value.Split(' ')[1]), int.Parse(message.Value.Split(' ')[2]))}"); }
+                        catch (Exception) { await sendMessages(GetRandomAnswer(Catergories.error)); }
+                    } else if (message.AsKeyword("eval ")) {
+                        try { await sendMessages($"Ecco il risultato: {new System.Data.DataTable().Compute(message.Value.Split(' ')[1], "")}"); }
+                        catch (Exception) { await sendMessages(GetRandomAnswer(Catergories.error)); }
+                    } 
+                    else if (message.AsKeyword("ask ")) await sendMessages(GetRandomAnswer(Catergories.ask));
+                    else if (message.AsKeyword("search ")) await sendMessages($"Ecco la tua ricerca: https://google.com/search?q={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}");
                     else if (message.AsKeyword("search.stack ")) await sendMessages($"Ecco la tua ricerca: https://stackoverflow.com/search?q={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}");
                     else if (message.AsKeyword("search.github ")) await sendMessages($"Ecco la tua ricerca: https://github.com/search?q={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}");
                     else if (message.AsKeyword("search.duck ")) await sendMessages($"Ecco la tua ricerca: https://duckduckgo.com/?q={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}&ia=web");
-                    else if (message.AsKeyword("search ")) await sendMessages($"Ecco la tua ricerca: https://google.com/search?q={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}");
                     else if (message.AsKeyword("search.ph ")) await sendMessages($"Ecco la tua ricerca: https://pornhub.com/search?q={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}");
                     else if (message.AsKeyword("search.yt ")) await sendMessages($"Ecco la tua ricerca: https://youtube.com/results?search_query={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}");
                     else if (message.AsKeyword("source")) await sendMessages("Ecco il source: https://github.com/Carpall/DalvikBot");
@@ -134,22 +145,6 @@ namespace Dalvik_Bot
     class Message
     {
         public string Value = "";
-        public string GetEmptyString()
-        {
-            string toReturn = "";
-            bool isInterpolate = false;
-            foreach (char chr in Value) {
-                if (chr == '"') {
-                    toReturn += '"';
-                    isInterpolate = (isInterpolate) ? false : true;
-                } else if (!isInterpolate)
-                    toReturn += chr;
-                else
-                    toReturn += ' ';
-
-            }
-            return toReturn;
-        }
         public string Pop(string str)
         {
             return Value.Replace(str, string.Empty);
@@ -178,46 +173,6 @@ namespace Dalvik_Bot
         public string Select(int startIndex, int finishIndex)
         {
             return Value.Substring(startIndex, finishIndex - startIndex);
-        }
-        public string RemoveComments(string commentsChar)
-        {
-            string result = "";
-            bool isInterpolate = false;
-            for (int i = 0; i < Value.Length; i++) {
-                if (Value[i] == '"') {
-                    isInterpolate = (!isInterpolate) ? true : false;
-                    result += '"';
-                } else if (Value[i] == commentsChar[0] && Value[i + 1] == commentsChar[1] && !isInterpolate) {
-                    break;
-                } else {
-                    result += Value[i];
-                }
-            }
-            return result;
-        }
-        public List<string> GetWordWrapList(string PatternToSplit)
-        {
-            string result = "";
-            bool isInterpolate = false;
-            for (int j = 0; j < Value.Length; j++) {
-                if (Value[j] == '"') {
-                    isInterpolate = (!isInterpolate) ? true : false;
-                    result += '"';
-                    continue;
-                } else if (isInterpolate) {
-                    result += Value[j];
-                    continue;
-                } else if (PatternToSplit.Contains(Value[j])) {
-                    result += '⳿';
-                    continue;
-                } else result += Value[j];
-            }
-            List<string> toReturn = new List<string>();
-            string[] resultSplit = result.Split('⳿');
-            for (int i = 0; i < resultSplit.Count(); i++) {
-                if (!string.IsNullOrWhiteSpace(resultSplit[i])) toReturn.Add(resultSplit[i]);
-            }
-            return toReturn;
         }
         public bool startWith(char preCommand)
         {
