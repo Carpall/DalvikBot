@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Discord.Rest;
 using Discord.WebSocket;
-using Discord.Commands;
-using Discord.Net;
-using Discord.API;
 using Discord;
 
 namespace Dalvik_Bot
@@ -47,7 +42,7 @@ namespace Dalvik_Bot
         // env var
         public DiscordSocketClient Client;
         private Dictionary<Catergories, string[]> Dictionary = new Dictionary<Catergories, string[]>();
-        public Random Random = new Random();
+        public static Random Random = new Random();
         ISocketMessageChannel channel;
         private Dictionary<string, int> Economy = new Dictionary<string, int>();
 
@@ -77,8 +72,8 @@ namespace Dalvik_Bot
             using (var stream = new System.IO.StreamWriter(Username+"/Documents/DalvikData.data")) {
                 foreach (var item in Economy.Keys) {
                     stream.Write(item + ' ' + Economy[item]);
-                    stream.Close();
                 }
+                stream.Close();
             }
         }
 
@@ -96,7 +91,7 @@ namespace Dalvik_Bot
             Message message = new Message();
             message.Value = signal.Content;
             channel = signal.Channel;
-            string user = signal.Author.Mention;
+            string user = signal.Author.Mention + signal.Author.Username;
 
             if (!signal.Author.IsBot) {
                 if (message.Pop(" ") == "$") await sendMessages(GetRandomAnswer(Catergories.waitingForCommand));
@@ -154,6 +149,38 @@ namespace Dalvik_Bot
                         dest.Close();
                         await channel.SendFileAsync(Username+"/Documents/tts.mp3", "Qualcuno voleva dire:");
                     }
+                    else if (message.AsKeyword("masters")) {
+                        string[] lb = {"","","" };
+                        int[] lbCash = { 0, 0, 0};
+                        foreach (var account in Economy.Keys) {
+                            if (Economy[account] > lbCash[0]) {
+                                lbCash[0] = Economy[account];
+                                lb[0] = account;
+                            } else if (Economy[account] > lbCash[1]) {
+                                lbCash[1] = Economy[account];
+                                lb[1] = account;
+                            } else if (Economy[account] > lbCash[2]) {
+                                lbCash[2] = Economy[account];
+                                lb[2] = account;
+                            }
+                        }
+                        var author = new EmbedAuthorBuilder() { Name = "Cash Masters" };
+                        EmbedBuilder embed = new EmbedBuilder() {
+                            Author = author,
+                            Color = new Color(Random.Next(255), Random.Next(255), Random.Next(255)),
+                            ImageUrl = "https://image.flaticon.com/iconkllllàòò s/svg/2213/2213756.svg",
+                        };
+                        embed
+                            .AddField("🥇 1# " + lb[0].Substring(lb[0].IndexOf(">") + 1), " :dollar: " + lbCash[0])
+                            .AddField("🥈 2# " + lb[1].Substring(lb[1].IndexOf(">") + 1), " :dollar: " + lbCash[1])
+                            .AddField("🥉 3# " + lb[2].Substring(lb[2].IndexOf(">") + 1), " :dollar: " + lbCash[2]);
+                        await channel.SendMessageAsync("", false, embed.Build());
+                    }
+                    else if (message.AsKeyword("ban")) {
+                        
+                        toBan.Id = 
+                    }
+                    //else if (kick)
                     else if (message.AsKeyword("ask ")) await sendMessages(GetRandomAnswer(Catergories.ask));
                     else if (message.AsKeyword("search ")) await sendMessages($"Ecco la tua ricerca: https://google.com/search?q={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}");
                     else if (message.AsKeyword("search.stack ")) await sendMessages($"Ecco la tua ricerca: https://stackoverflow.com/search?q={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}");
@@ -169,8 +196,7 @@ namespace Dalvik_Bot
                             await sendMessages(user + " Non hai cash 💲");
                             return;
                         }
-                        var author = new EmbedAuthorBuilder();
-                        author.Name = signal.Author.Username+" Cash";
+                        var author = new EmbedAuthorBuilder() { Name = signal.Author.Username + " Cash" };
                         EmbedBuilder embed = new EmbedBuilder() {
                             Author = author,
                             Color = new Color(Random.Next(255), Random.Next(255), Random.Next(255)),
@@ -202,7 +228,7 @@ namespace Dalvik_Bot
                         Economy.Add(user, 0);
                         return;
                     }
-
+                    Economy[user]+=Random.Next(1,4);
                     // sistema di ascolto messaggi, per machine learning
                 }
 
@@ -226,6 +252,8 @@ namespace Dalvik_Bot
                 .AddField("`$`", "[ottenere l'attenzione di Dalvik]")
                 .AddField("`$help`", "[visualizzare questa lista]")
                 .AddField("`$ciao`", "[fare 'ciao' a Dalvik]")
+                .AddField("`$cash`", "[visualizzare il proprio budget, nota: il denaro può essere impiegato in molte richieste]")
+                .AddField("`$masters`", "[visualizzare una lista rappresentante il podio dei più ricchi]")
                 .AddField("`$gen`", "[chiedere a Dalvik di generare una password complessa, format: `$gen <char_n>`]")
                 .AddField("`$purge`", "[pulire il canale, format: `$purge <n_mess>`]")
                 .AddField("`$tts`", "[mandare un messaggio vocale anonimo registato da Dalvik, format: `$tts <text>`]")
