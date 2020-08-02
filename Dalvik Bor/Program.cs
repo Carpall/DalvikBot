@@ -89,6 +89,17 @@ namespace Dalvik_Bot
         string Username = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         private async Task receiveMessages(SocketMessage signal)
         {
+
+
+            /*
+             *
+             * - Do an integration with git(upload and download files from command -> '$git.up', '$git.down')
+             * + Organize a minigame(roulette, rob, market, sell, etc.)
+             * + Organize an additional system of earning and spending coins
+             * 
+             */
+
+
             if (signal.Channel is SocketDMChannel) return;
             // def simple class for easiest method using
             Message message = new Message();
@@ -227,20 +238,42 @@ namespace Dalvik_Bot
                         return;
                         ifPermissionFound:
                         await sendMessages($"Ecco la tua ricerca: https://pornhub.com/search?q={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}");
-                    } else if (message.AsKeyword("search.yt ")) await sendMessages($"Ecco la tua ricerca: https://youtube.com/results?search_query={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}");
+                    }
+                    else if (message.AsKeyword("bet.")) {
+                        int moneyBet = 0;
+                        try { moneyBet = int.Parse(ulong.Parse(message.Value.Split(' ')[1]).ToString()); }
+                        catch { await sendMessages(signal.Author.Mention + " Non puoi giocare in negativo :joy: :woman_facepalming:"); return; }
+                        if (Economy[user] - moneyBet >= 0) {
+                            var author = new EmbedAuthorBuilder() { Name = signal.Author.Username + " Bet" };
+                            string result = (Random.Next(100) % 2 == 0) ? "black" : "red";
+                            string choseColor = message.Value.Split('.')[1].Split(' ')[0];
+                            EmbedBuilder embed = new EmbedBuilder() {
+                                Author = author,
+                                Color = (choseColor == result) ? Color.Green : Color.Red,
+                                ImageUrl = (signal.Author as SocketGuildUser).Guild.IconUrl
+                            };
+                            embed
+                                .AddField("Bet on " + choseColor + ": ", ":dollar: " + message.Value.Split(' ')[1])
+                                .AddField("Result: " + result, " :dollar: " + ((choseColor == result) ? "+" + moneyBet : "-" + moneyBet));
+                            Economy[user] += (choseColor == result) ? moneyBet : -moneyBet;
+                            await channel.SendMessageAsync("", false, embed.Build());
+                        } else
+                            await sendMessages(signal.Author.Mention+" Non hai abbastanza soldi bro :face_with_hand_over_mouth:");
+                    }
+                    else if (message.AsKeyword("search.yt ")) await sendMessages($"Ecco la tua ricerca: https://youtube.com/results?search_query={message.Value.Remove(0, message.Value.IndexOf(" ")).Replace(" ", "+")}");
                     else if (message.AsKeyword("source")) await sendMessages("Ecco il source: https://github.com/Carpall/DalvikBot");
                     else if (message.AsKeyword("author")) await sendMessages("Ecco la page dell'autore: https://github.com/Carpall");
                     else if (message.AsKeyword("help")) await sendHelpCommand();
                     else if (message.AsKeyword("cash")) {
                         if (!Economy.ContainsKey(user)) {// creare un off del bot dove salvare i dati
-                            await sendMessages(user + " Non hai cash 💲");
+                            await sendMessages(signal.Author.Mention + " Non hai cash 💲");
                             return;
                         }
                         var author = new EmbedAuthorBuilder() { Name = signal.Author.Username + " Cash" };
                         EmbedBuilder embed = new EmbedBuilder() {
                             Author = author,
                             Color = new Color(Random.Next(255), Random.Next(255), Random.Next(255)),
-                            ImageUrl = "https://image.flaticon.com/icons/svg/2213/2213756.svg",
+                            ImageUrl = (signal.Author as SocketGuildUser).Guild.IconUrl
                         };
                         embed
                             .AddField("Bank:", ":dollar: " + Economy[user]);
@@ -296,6 +329,7 @@ namespace Dalvik_Bot
                 .AddField("`$ban`", "[eseguire un ban agli utenti taggati, format: `$ban <@mention1> <@ment..2> <ecc...>`]")
                 .AddField("`$sban`", "[eseguire un unban agli utenti taggati, format: `$sban <@mention1> <@ment..2> <ecc...>`]")
                 .AddField("`$cash`", "[visualizzare il proprio budget, nota: il denaro può essere impiegato in molte richieste]")
+                .AddField("`$bet`", "[scommettere una somma alla roulette (red, black), format: `$bet.red <amount>`,`$bet.black <amount>`]")
                 .AddField("`$masters`", "[visualizzare una lista rappresentante il podio dei più ricchi]")
                 .AddField("`$gen`", "[chiedere a Dalvik di generare una password complessa, format: `$gen <char_n>`]")
                 .AddField("`$purge`", "[pulire il canale, format: `$purge <n_mess>`]")
